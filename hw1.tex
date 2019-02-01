@@ -182,7 +182,7 @@ announced the closure of his site and goes into hiding.
 & Select if yes \checkbox{Q2P1Y}{width=1.5em}{
 %Yes/No directions: change this argument to 'true' to check the box
 %Alternatively, export and check the box using a pdf editor
-true}\\\\
+false}\\\\
 
 2. Does Bob violate \textbf{least privilege}?
 & Select if yes \checkbox{Q3P2Y}{width=1.5em}{true}\\\\
@@ -191,13 +191,13 @@ true}\\\\
 & Select if yes \checkbox{Q3P3Y}{width=1.5em}{false}\\\\
 
 4. Does Bob violate \textbf{separation of responsibility}?
-& Select if yes \checkbox{Q3P4Y}{width=1.5em}{true}\\\\
+& Select if yes \checkbox{Q3P4Y}{width=1.5em}{false}\\\\
 
 5. Does Bob violate \textbf{don't rely on security by obscurity}?
-& Select if yes \checkbox{Q3P5Y}{width=1.5em}{false}\\\\
+& Select if yes \checkbox{Q3P5Y}{width=1.5em}{true}\\\\
 
 6. Does Bob violate \textbf{consider human factors}?
-& Select if yes \checkbox{Q3P6Y}{width=1.5em}{false}\\\\
+& Select if yes \checkbox{Q3P6Y}{width=1.5em}{true}\\\\
 
 7. Does Bob violate \textbf{complete mediation}?
 & Select if yes \checkbox{Q3P7Y}{width=1.5em}{false}\\\\
@@ -248,6 +248,7 @@ int main(int argc, char *argv[])
   \item What is this vulnerability called?\\
 \textfield{Q4P2}{0.5cm}{
 %Your solution to Q4 part 2 here
+Buffer overflow
 }
   \item Just before the program executes the line in part 1, the registers are:
     \begin{center}
@@ -259,19 +260,22 @@ int main(int argc, char *argv[])
     Also make sure to include the address that the attacker needs to over-write. (Maximum 5 sentences)\\
 \textfield{Q4P3}{3cm}{
 %Your solution to Q4 part 3 here
+The attacker can input a 48-bytes long string. The last 4 bytes should contain the malicious return address. This 4 bytes data will overwrite the original return address located at 0xBFFFF84C.
 }
   \item What would you change to fix the problem in part 1?\\
 \textfield{Q4P4}{0.5cm}{
 %Your solution to Q4 part 4 here
+Use fgets() function instead of scanf()
 }
   \item Given the code as is, would stack canaries prevent exploitation of this vulnerability?\\
       Select if yes \checkbox{Q4P5Y}{}{
       %Yes/No directions: change this argument to 'true' to check the box
       %Alternatively, export and check the box using a pdf editor
-      false}\\
+      true}\\
     Why or why not?\\
-\textfield{Q4P5}{1cm}{
+\textfield{Q4P5}{1.8cm}{
 %Your solution to Q4 part 5 here
+Canaries are random value that attacker doesn't know. If the attacker want to overwrite the return address, he has overwrite the canaries with a wrong value in the same time. Thus, by checking whether the value of canaries is unchanged, this attack can be detected and prevented.
 }
 \end{enumerate}
 \includesolution{sol4}
@@ -315,10 +319,20 @@ void dectohex(uint32_t decimal, char* hex) {
 \item Please identify the \textbf{preconditions} that must hold true for the following code to be memory safe. In addition, the precondition must be as conservative as possible (e.g. \texttt{decimal} cannot be required to be solely zero). Justify why your given precondition cannot be any less strict.\\
 \textfield{Q5P1}{4.5cm}{
 %Your solution to Q5 part 1 here
+`hex' shouldn't be NULL and the memory spaces it points to should be at least 9 bytes long to avoid possible overflow. 
+
+Justify: `decimal' is 32-bits unsigned integer number. So when it is converted into hexadecimal representation, it should be no longer than 8 character long. Thus, codes within the first do-while loop will be executed no more than 8 times. Plus 1 byte for null terminator in line 20. In total, at least 9 bytes is required to eliminate potential vulnerability.
 }
 \item Please identify the loop \textbf{invariants} (b, c) that must hold true and justify them as well.\\
 \textfield{Q5P2}{4.5cm}{
 %Your solution to Q5 part 2 here
+invariants(b): $0 < j < 8$  \&\&  $0 \leq \operatorname{decimal} \leq$ 0xFFFFFFFF \&\& digit $\in$ \{`0', `1', `2', ..., `E', `F'\}
+
+`decimal' is 32-bits unsigned integer, therefore it will definitely greater than or equal to 0 and less than or equal to 0xFFFFFFFF. Since `decimal' will be divided by 16 in each loop, this do-will loop will be executed no more than 8 times. This guarantee $0 < j < 8$. Line 7-11 make sure `digit' will hold valid hexadecimal character.
+
+invariants(c): $0 < i < 8$ \&\& $0 < j < 8$
+
+Since this while loop will be executed no more than 8 times.
 }
 \end{enumerate}
 \includesolution{sol5}
