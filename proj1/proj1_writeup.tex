@@ -66,5 +66,32 @@ In figure \ref{fig:gdb2}, I use gdb to print the value in $eip$ register. As you
 \newpage
 \section{Deep Infiltration}
 
+In line 9, this buggy code miscalculated the length of array when checking the boundary. Therefore, it allows us to initiate an overflow attack and overwrite 1 byte.
+
+There're two stage in this attack. 
+
+First, the shellcode is injected into environment variable. This is done by \textbf{egg} script.  Figure \ref{fig:gdb3} shows how to determine the address of injected shellcode in environment variable.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{gdb3.png}
+\caption{\label{fig:gdb3}Retrive Shellcode Address}
+\end{figure}
+
+Second, I initiate an off-by-one overflow attack. Variable $buf$ is adjacent to $sbp$. Therefore, the least significant byte in $sbp$ will be overwrote. I let this byte be 0x10, which is the least significant part of $buf$'s starting address.
+
+ \begin{figure}[h]
+\centering
+\includegraphics[width=0.3\textwidth]{stack3.png}
+\caption{\label{fig:stack3}Stack Layout}
+\end{figure}
+
+After $flip()$ finish and return control to function $invoke()$. The $ebp$ register will have the wrong value pointing to variable $buf$. Then, the malicious address injected into $buf$ will be pop into $eip$ register when function $invoke()$ finish. Figure \ref{fig:gdb4} demonstrate how $eip$ register changed after hijacking.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.55\textwidth]{gdb4.png}
+\caption{\label{fig:gdb4}EIP value}
+\end{figure}
 
 \end{document}
