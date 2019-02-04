@@ -94,4 +94,25 @@ After $flip()$ finish and return control to function $invoke()$. The $ebp$ regis
 \caption{\label{fig:gdb4}EIP value}
 \end{figure}
 
+\newpage
+\section{Secret Exfiltration}
+
+This program will not behave properly if invalid input data is given to it. Specifically, if the last 4 bytes of input data is `$\backslash$', `x', `$\backslash$n' and `$\backslash$0' respectively, the bound checking of line 20 will fail. Therefore, more data behind this address can be printed.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{stack4.png}
+\caption{\label{fig:stack4}Stack Layout}
+\end{figure}
+
+As demonstrated in figure \ref{fig:stack4}, the \textbf{canary} is right behind variable $buffer$. Therefore this overflow attack can be conducted in two steps. First, construct an invalid input string described early to retrieve the value of \textbf{canary}. Second, inject shellcode and overwrite \textbf{canary} correctly to avoid program from crashing. Again, the relative position of return address can be calculated after reading assembly codes carefully. And the value of $ebp$ register can be printed by gdb.
+
+The first attack string should like this, `$\backslash$ x30 $\backslash$ x30 $\backslash$ x30 $\backslash$ x'. The 4th to 8th value in response string will be the \textbf{canary}'s value.
+
+The second attack string will be like this,
+\[
+ 'A' * 32 + \textbf{canary} +  'A' * 8 + '\backslash xd4 \backslash xfd \backslash xff \backslash xbf' + \textbf{SHELLCODE} + '\backslash n'
+ \]
+
+The length of A padding is 32. This is because all result will be copied to $answer$ by this program, thus, 16 more padding is needed.
 \end{document}
