@@ -63,11 +63,18 @@ width = \linewidth, multiline=true]{\mbox}%
 }{}
 }
 
+
+
 \newcommand{\checkbox}[3]{%
+\iftoggle{pdfform}{%
+\CheckBox[name = #1, backgroundcolor=white, bordercolor=black, #2]{}%
+}{%
 \ifprintanswers\else%
-\CheckBox[name = #1, checked = #3, backgroundcolor=white, bordercolor=black, #2]{}%
+\framebox[0.6cm]{\rule{0pt}{0.4cm}#3}
 \fi%
+}%
 }
+
 
 \def\duedate{Tuesday, 5 February 2019}
 
@@ -136,9 +143,9 @@ Is it OK to show another student (who is not your project partner) your
 draft code and ask them if they have any idea why your code is broken
 or any suggestions for how to debug it?\\\\
 Select if yes \checkbox{Q2Y}{}{
-%Yes/No directions: change this argument to 'true' to check the box
-%Alternatively, export and check the box using a pdf editor
-false}
+%Yes/No directions: uncomment 'X' to make it appear
+%X
+}
 
 
 \includesolution{sol2}
@@ -174,39 +181,53 @@ as much of the code was written (uncommented) in a late-night
 coffee-fuled frenzy, and Bob finds that he can't change any aspect of
 the website without breaking it in its entirety.  In a panic, Bob
 announced the closure of his site and goes into hiding.
-
 \newpage
-
 \begin{tabular}{m{12cm} m{3.5cm}}
 1. Does Bob violate \textbf{security is economics}?
 & Select if yes \checkbox{Q2P1Y}{width=1.5em}{
-%Yes/No directions: change this argument to 'true' to check the box
-%Alternatively, export and check the box using a pdf editor
-false}\\\\
+%Yes/No directions: uncomment 'X' to make it appear
+%X
+}\\\\
 
 2. Does Bob violate \textbf{least privilege}?
-& Select if yes \checkbox{Q3P2Y}{width=1.5em}{true}\\\\
+& Select if yes \checkbox{Q3P2Y}{width=1.5em}{
+X
+}\\\\
 
 3. Does Bob violate \textbf{fail-safe defaults}?
-& Select if yes \checkbox{Q3P3Y}{width=1.5em}{false}\\\\
+& Select if yes \checkbox{Q3P3Y}{width=1.5em}{
+%X
+}\\\\
 
 4. Does Bob violate \textbf{separation of responsibility}?
-& Select if yes \checkbox{Q3P4Y}{width=1.5em}{false}\\\\
+& Select if yes \checkbox{Q3P4Y}{width=1.5em}{
+%X
+}\\\\
 
 5. Does Bob violate \textbf{don't rely on security by obscurity}?
-& Select if yes \checkbox{Q3P5Y}{width=1.5em}{true}\\\\
+& Select if yes \checkbox{Q3P5Y}{width=1.5em}{
+X
+}\\\\
 
 6. Does Bob violate \textbf{consider human factors}?
-& Select if yes \checkbox{Q3P6Y}{width=1.5em}{true}\\\\
+& Select if yes \checkbox{Q3P6Y}{width=1.5em}{
+X
+}\\\\
 
 7. Does Bob violate \textbf{complete mediation}?
-& Select if yes \checkbox{Q3P7Y}{width=1.5em}{false}\\\\
+& Select if yes \checkbox{Q3P7Y}{width=1.5em}{
+%X
+}\\\\
 
 8. Does Bob violate \textbf{detect if you can't protect}?
-& Select if yes \checkbox{Q3P8Y}{width=1.5em}{false}\\\\
+& Select if yes \checkbox{Q3P8Y}{width=1.5em}{
+%X
+}\\\\
 
 9. Does Bob violate \textbf{design security in from the start}?
-& Select if yes \checkbox{Q3P9Y}{width=1.5em}{true}\\\\
+& Select if yes \checkbox{Q3P9Y}{width=1.5em}{
+X
+}\\\\
 
 \end{tabular}
 \includesolution{sol3}
@@ -260,7 +281,7 @@ Buffer overflow
     Also make sure to include the address that the attacker needs to over-write. (Maximum 5 sentences)\\
 \textfield{Q4P3}{3cm}{
 %Your solution to Q4 part 3 here
-The attacker can input a 48-bytes long string. The last 4 bytes should contain the malicious return address. This 4 bytes data will overwrite the original return address located at 0xBFFFF84C.
+The attacker can input a very long string. The last 4 bytes should contain the malicious return address. This 4 bytes data will overwrite the original return address located at 0xBFFFF84C.
 }
   \item What would you change to fix the problem in part 1?\\
 \textfield{Q4P4}{0.5cm}{
@@ -269,9 +290,9 @@ Use fgets() function instead of scanf()
 }
   \item Given the code as is, would stack canaries prevent exploitation of this vulnerability?\\
       Select if yes \checkbox{Q4P5Y}{}{
-      %Yes/No directions: change this argument to 'true' to check the box
-      %Alternatively, export and check the box using a pdf editor
-      true}\\
+      %Yes/No directions: uncomment 'X' to make it appear
+      X
+      }\\
     Why or why not?\\
 \textfield{Q4P5}{1.8cm}{
 %Your solution to Q4 part 5 here
@@ -319,7 +340,7 @@ void dectohex(uint32_t decimal, char* hex) {
 \item Please identify the \textbf{preconditions} that must hold true for the following code to be memory safe. In addition, the precondition must be as conservative as possible (e.g. \texttt{decimal} cannot be required to be solely zero). Justify why your given precondition cannot be any less strict.\\
 \textfield{Q5P1}{4.5cm}{
 %Your solution to Q5 part 1 here
-`hex' shouldn't be NULL and the memory spaces it points to should be at least 9 bytes long to avoid possible overflow. 
+`hex' shouldn't be NULL and it should be a valid address. And the memory spaces it points to should be at least 9 bytes long to avoid possible overflow. 
 
 Justify: `decimal' is 32-bits unsigned integer number. So when it is converted into hexadecimal representation, it should be no longer than 8 character long. Thus, codes within the first do-while loop will be executed no more than 8 times. Plus 1 byte for null terminator in line 20. In total, at least 9 bytes is required to eliminate potential vulnerability.
 }
