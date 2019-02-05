@@ -115,4 +115,27 @@ The second attack string will be like this,
  \]
 
 The length of A padding is 32. This is because all result will be copied to $answer$ by this program, thus, 16 more padding is needed.
+
+\newpage
+\section{The Last Bastion}
+
+There's a magic number $58623$ in the buggy program, which is $ffe4$ in hexadecimal. And it is $jmp  *\%esp$ when interpreted as executable instruction. This instruction is not protected by ASLR, which means we can obtain its exact address. Figure \ref{fig:gdb5} demonstrate how to find this instruction is gdb. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.7\textwidth]{gdb5.png}
+\caption{\label{fig:gdb5}Address of  $jmp *\%esp$}
+\end{figure}
+
+This vulnerability makes it possible to initiate a \textbf{ret2esp} attack, which can bypass ASLR.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.5\textwidth]{stack5.png}
+\caption{\label{fig:stack5}Stack Layout}
+\end{figure}
+
+Figure \ref{fig:stack5} demonstrate the memory layout before and after attack. Shellcode is placed right behind RIP, and RIP is redirected to  $jmp  *\%esp$ instruction.
+
+
 \end{document}

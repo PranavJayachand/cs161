@@ -1,0 +1,71 @@
+#!/bin/bash
+set -euo pipefail
+exit_shell() {
+    exit 0
+}
+trap exit_shell EXIT
+
+CONFIG=~customizer/.customization
+PS3="Enter choice number? "
+
+yesno() {
+    select yn in "Yes" "No"; do
+        case $yn in
+            Yes ) echo; return 0;;
+            No )  echo; return 1;;
+        esac
+    done 
+}
+
+getid() {
+    while
+        read -p "Enter your $1 (ex. cs161-aaa): " -r id
+        ! [[ "$id" =~ ^(cs161-[a-z]{3}|neo)$ ]]
+    do
+        echo "Invalid ID." >&2
+    done
+    echo "$id"
+}
+
+while :; do
+    if [ -f "$CONFIG" ]; then
+        echo "It looks like the configuration file already exists:"
+        cat "$CONFIG"
+        echo "Would you like to reconfigure?"
+        if ! yesno ; then
+            ./read_it
+            exit 0
+        fi
+    fi
+
+    echo "Are you working with a partner?"
+    if yesno ; then
+        id1=$(getid "ID")
+        id2=$(getid "partner's ID")
+    else
+        id1=$(getid "ID")
+        id2="[No partner.]"
+    fi
+    cat <<EOF
+
+Is the following information correct?
+
+    Partner 1: $id1
+    Partner 2: $id2
+
+EOF
+    if yesno ; then
+        break
+    else
+        echo "OK, restarting."
+    fi
+done
+
+echo "Customizing VM!"
+rm -f "$CONFIG"
+printf "%s\n%s\n" "$id1" "$id2" | sort > "$CONFIG"
+chmod 444 "$CONFIG"
+
+timeout cmatrix -bfasu 3 || :
+
+./read_it
