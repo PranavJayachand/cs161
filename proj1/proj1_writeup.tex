@@ -47,7 +47,7 @@ The address of $sbp$ can be retrieved by letting gdb print the value of $ebp$ re
 This program uses \textbf{char} to receive an integer that used to check array access boundary. However, \textbf{char}
  is a signed data type, which means it can be negative. Thus by passing a negative value to it, e.g., 0xFF, we can bypass the boundary checking and initiate an overflow attack.
  
- \begin{figure}[h]
+\begin{figure}[h]
 \centering
 \includegraphics[width=0.5\textwidth]{stack2.png}
 \caption{\label{fig:stack2}Stack Layout}
