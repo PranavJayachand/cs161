@@ -365,18 +365,23 @@ He cleverly sends Raluca a malicious link titled ``IMPORTANT PROJECT UPDATE FROM
 
 \textfield{Q3P1}{3cm}{
 %Your solution to Q3 part 1 here
+He can spoof the DNS response, so that  \texttt{www.midterm.ta\_secrets.com} will be linked to his faked website. After Raluca uploading her draft into this faked website, he can obtain it.
 }
 
 \part Explain why Okoro can spoof a DNS response now even though Raluca will likely upload the valuable midterm file in an hour or two. \textbf{Answer in a single sentence}.
 
 \textfield{Q3P2}{2cm}{
 %Your solution to Q3 part 2 here
+Local DNS resolver will cache DNS response.
 }
 
 \part Okoro wants to use the easiest network attack possible to spoof the response. An off-path attack is easier than an on-path attack, and an on-path attack is easier than a man-in-the-middle attack. Suppose Okoro can only generate a single fake response to the cafe's DNS server query (though his response will reliably reach the server first). What flavor of network attack will Okoro use (off-path, on-path, or man-in-the-middle)? Justify your answer using no more than \textbf{two sentences}.
 
 \textfield{Q3P3}{3cm}{
 %Your solution to Q3 part 3 here
+He can use on-path attack.
+
+Because he has only one shot, so he has to know the accurate transaction ID to generate a valid fake DNS response.
 }
 
 \newpage
@@ -384,12 +389,14 @@ He cleverly sends Raluca a malicious link titled ``IMPORTANT PROJECT UPDATE FROM
 
 \textfield{Q3P4}{2cm}{
 %Your solution to Q3 part 4 here
+$p = \frac{k}{2^{16}}$
 }
 
 \part Okoro finishes reading Kaminsky's paper and realizes he can improve his off-path attack. He modifies the link in his message to Raluca (``IMPORTANT PROJECT UPDATE FROM NICK") so that when she clicks it her laptop will generate $m$ requests instead of one. The requests are for URLs: \texttt{1.ta\_secrets.com, 2.ta\_secrets.com, $...$, m.ta\_secrets.com}. Despite the fact that none of these URLs are valid, Kaminsky has told Okoro that if he can correctly spoof the response to a single one of these queries, he will be able to give a malicious IP address to the higher domain $ta\_secrets.com$ in the ``Additional" field of the response and thus by extension control \texttt{midterm.ta\_secrets.com}\footnote{For more details on the Kaminsky attack, see the ``Dan's Shenanigans'' section of \href{http://unixwiz.net/techtips/iguide-kaminsky-dns-vuln.html}{this link}}! Assuming again that Okoro can generate $k$ spoofed responses \textit{per request}, what is the probability, $p$, that he succeeds?
 
 \textfield{Q3P5}{2cm}{
 %Your solution to Q3 part 5 here
+$p = \frac{mk}{2^{16}}$
 }
 
 
