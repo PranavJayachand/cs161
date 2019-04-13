@@ -4,3 +4,5 @@
 *.fls
 *.log
 *.out
+*/__pycache__/
+proj3/avatar_images/
