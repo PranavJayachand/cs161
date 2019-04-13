@@ -133,7 +133,7 @@ replay that HTTP request to the server a second time.
 
 \checkbox{Q1P1O2Y}{width=1.5em}{
 %Yes/No directions: uncomment 'X' to make it appear
-%X
+X
 } 
 If Alice visits the same HTTPS URL twice,
 when Alice visits that URL the second time, a man-in-the-middle can
@@ -142,14 +142,14 @@ on Alice's first visit.
 
 \checkbox{Q1P1O3Y}{width=1.5em}{
 %Yes/No directions: uncomment 'X' to make it appear
-%X
+X
 } 
 A man-in-the-middle can not compromise Alice's confidentiality
 (e.g., learn the data she sends over TLS).
 
 \checkbox{Q1P1O4Y}{width=1.5em}{
 %Yes/No directions: uncomment 'X' to make it appear
-%X
+X
 } 
 A man-in-the-middle can not learn the symmetric MAC keys that protect
 data sent over TLS connections initiated by Alice's browser.
@@ -171,14 +171,14 @@ Firefox process. Which of the following are true? \textbf{Select all that apply}
 
 \checkbox{Q1P2O1Y}{width=1.5em}{
 %Yes/No directions: uncomment 'X' to make it appear
-%X
+X
 } 
 If Alice visits a HTTPS URL, a man-in-the-middle can not
 replay that HTTP request to the server a second time.
 
 \checkbox{Q1P2O2Y}{width=1.5em}{
 %Yes/No directions: uncomment 'X' to make it appear
-%X
+X
 } 
 If Alice visits the same HTTPS URL twice,
 when Alice visits that URL the second time a man-in-the-middle can
@@ -222,7 +222,7 @@ replay that HTTP request to the server a second time.
 
 \checkbox{Q1P3O2Y}{width=1.5em}{
 %Yes/No directions: uncomment 'X' to make it appear
-%X
+X
 } 
 If Alice visits the same HTTPS URL twice,
 when Alice visits that URL the second time a man-in-the-middle can
@@ -231,14 +231,14 @@ on Alice's first visit.
 
 \checkbox{Q1P3O3Y}{width=1.5em}{
 %Yes/No directions: uncomment 'X' to make it appear
-%X
+X
 } 
 A man-in-the-middle can not compromise Alice's confidentiality
 (e.g., learn the data she sends over TLS).
 
 \checkbox{Q1P3O4Y}{width=1.5em}{
 %Yes/No directions: uncomment 'X' to make it appear
-%X
+X
 } 
 A man-in-the-middle can not learn the symmetric MAC keys that protect
 data sent over TLS connections initiated by Alice's browser.
@@ -340,13 +340,13 @@ For each scenario, which attack will Aoife use (on-path, off-path, or man-in-the
     
     \checkbox{Q2P4O2Y}{width=1.5em}{
     %Yes/No directions: uncomment 'X' to make it appear
-    %X
+    X
     } 
     On-path
     
     \checkbox{Q2P4O3Y}{width=1.5em}{
     %Yes/No directions: uncomment 'X' to make it appear
-    X
+    %X
     } 
     Man-in-the-middle
     
@@ -381,7 +381,7 @@ Local DNS resolver will cache DNS response.
 %Your solution to Q3 part 3 here
 He can use on-path attack.
 
-Because he has only one shot, so he has to know the accurate transaction ID to generate a valid fake DNS response.
+Because he has only one shot, so he has to know the accurate transaction ID and UPD port to generate a valid fake DNS response.
 }
 
 \newpage
@@ -389,14 +389,15 @@ Because he has only one shot, so he has to know the accurate transaction ID to g
 
 \textfield{Q3P4}{2cm}{
 %Your solution to Q3 part 4 here
-$p = \frac{k}{2^{16}}$
+Transaction ID is 16-bits long, therefore, $p = \frac{k}{2^{16}}$.
 }
 
 \part Okoro finishes reading Kaminsky's paper and realizes he can improve his off-path attack. He modifies the link in his message to Raluca (``IMPORTANT PROJECT UPDATE FROM NICK") so that when she clicks it her laptop will generate $m$ requests instead of one. The requests are for URLs: \texttt{1.ta\_secrets.com, 2.ta\_secrets.com, $...$, m.ta\_secrets.com}. Despite the fact that none of these URLs are valid, Kaminsky has told Okoro that if he can correctly spoof the response to a single one of these queries, he will be able to give a malicious IP address to the higher domain $ta\_secrets.com$ in the ``Additional" field of the response and thus by extension control \texttt{midterm.ta\_secrets.com}\footnote{For more details on the Kaminsky attack, see the ``Dan's Shenanigans'' section of \href{http://unixwiz.net/techtips/iguide-kaminsky-dns-vuln.html}{this link}}! Assuming again that Okoro can generate $k$ spoofed responses \textit{per request}, what is the probability, $p$, that he succeeds?
 
 \textfield{Q3P5}{2cm}{
 %Your solution to Q3 part 5 here
-$p = \frac{mk}{2^{16}}$
+He has $ \frac{k}{2^{16}}$ chance to win in a single URL. Overall, he can success if he didn't mess up $m$ times.
+Therefore, $p = 1-( 1 -  \frac{k}{2^{16}})^m$.
 }
 
 
@@ -405,6 +406,7 @@ When someone visits \texttt{thanks\_nick.ta\_secrets.com} they are able to chang
 
 \textfield{Q3P6}{2cm}{
 %Your solution to Q3 part 6 here
+Make a DNS request to ask NSEC record for \texttt{midterm.ta\_secrets.com}. Since the only other subdomain is \texttt{thanks\_nick.ta\_secrets.com}, he can get info about it.
 }
 
 \end{parts}
@@ -561,7 +563,7 @@ few, if any, false positives or false negatives).
 
 \textfield{Q4P4}{3cm}{
 %Your solution to Q4 part 4 here
-Block all inbound traffics except established TCP connections or packets that try to establish a TCP connection.
+Block all inbound UDP packets from source port 11211.
 }
 
 \end{parts}
