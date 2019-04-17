@@ -9,6 +9,14 @@
                 <label class="label" for="avatar">Avatar Image</label>
                 <input class="input" id="avatar" type="file" name="avatar" value="{{ avatar }}">
             </div>
+            <input type="text" class="input" style="display:none" id="username" name="username" value="{{ username }}">
+            <div class="field">
+                <p class="control">
+                    <button type="submit" class="button is-primary">Update Profile</button>
+                </p>
+            </div>
+        </form>
+        <form action="/profile" method="post" enctype=application/x-www-form-urlencoded>
             <div class="field">
                 <label class="label" for="age">Age</label>
                 <input class="input" id="age" type="number" name="age" value="{{ age }}">

@@ -146,14 +146,16 @@ def profile(username):
         age = escape_html(str(age))
         return render_template('profile.html', username=username, avatar=avatar_filename, age=age)
 
-    username = escape_sql(request.form['username'])
     if 'avatar' in request.files:
         avatar = request.files['avatar']
         stored_avatar_filename = avatar_helper.save_avatar_image(avatar, username)
+        stored_avatar_filename = escape_sql(escape_html(stored_avatar_filename))
         if stored_avatar_filename:
             database.execute("UPDATE users SET avatar='{}' WHERE username='{}';".format(stored_avatar_filename, username))
-    age = escape_html(escape_sql(request.form['age']))
-    database.execute("UPDATE users SET age={} WHERE username='{}';".format(age, username))
+    else:
+        username = escape_sql(request.form['username'])
+        age = escape_html(escape_sql(request.form['age']))
+        database.execute("UPDATE users SET age={} WHERE username='{}';".format(age, username))
 
     return redirect(url_for('wall'))
 
