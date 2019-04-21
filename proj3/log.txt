@@ -4,6 +4,7 @@
 // 2 XSS in post comment
 <script>alert("Stored XSS");</script>
 <script>alert(document.cookie);</script>
+<script>document.cookie="SESSION_ID=a1bb809d940217cd6866df4b8e349b356a7ec4883faaeb87752a4d4fcb080558612cef59371f6d1d410cf8a459";</script>
 // 3 Modify dirk's age
 // 4 Non-number age
 // 5 SQL Injection through Cookie
@@ -22,9 +23,14 @@ age validation
 session id never expire
 // 11
 file size not be constrainted
-// 12 delete_avatars.html line 17
+// 12
+server.py line 151
+HTTP 500 error shouldn't be expoused to user
+
+
+// 7 delete_avatars.html line 17
 <strong>Delete? </strong><input name="avatar" type="checkbox" value={{ avatar }}>
-// 13 wall.html line 12
+// 7 wall.html line 12
 <img class="avatar-image" src={{ avatar }}>
 
 
