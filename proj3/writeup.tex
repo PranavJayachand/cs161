@@ -90,7 +90,7 @@
 	
 	In auth\_helper.py line 20, the buggy program do not sanitize session id before construct a sql query. Therefore, the attacker can inject sql statement here.
 	
-	found\_session = database.fetchone("SELECT username FROM sessions WHERE id='{}';".format(session))
+	found\_session = database.fetchone("SELECT username FROM sessions WHERE id='\{\}';".format(session))
 	
 	The attacker can give a malicious id like this, \textbf{' OR username='dirks}
 	
