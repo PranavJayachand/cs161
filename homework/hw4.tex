@@ -1,0 +1,322 @@
+\documentclass[12pt]{exam}
+\usepackage[homework,id=4]{cs161}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{subfiles}
+\usepackage{etoolbox}
+
+\lstset{
+language=C,                % choose the language of the code
+basicstyle=\scriptsize,       % the size of the fonts that are used for the code
+numbers=left,                   % where to put the line-numbers
+numberstyle=\scriptsize,      % the size of the fonts that are used for the line-numbers
+stepnumber=1,                   % the step between two line-numbers. If it is 1 each line will be numbered
+numbersep=5pt,                  % how far the line-numbers are from the code
+backgroundcolor=\color{white},  % choose the background color. You must add \usepackage{color}
+showspaces=false,               % show spaces adding particular underscores
+showstringspaces=false,         % underline spaces within strings
+showtabs=false,                 % show tabs within strings adding particular underscores
+frame=single,           % adds a frame around the code
+tabsize=2,          % sets default tabsize to 2 spaces
+captionpos=b,           % sets the caption-position to bottom
+breaklines=true,        % sets automatic line breaking
+breakatwhitespace=false,    % sets if automatic breaks should only happen at whitespace
+escapeinside={\%*}{*)}          % if you want to add a comment within your code
+}
+
+
+
+\newcommand{\solbox}[2]{%
+\fbox{%
+\parbox[c][#1][t]{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{
+  \hrule width \hsize height 0pt
+  #2
+ }%
+}%
+\par\vspace{\ht\strutbox}
+}
+\makeatother
+
+\usepackage{etoolbox}
+\newtoggle{pdfform}
+\togglefalse{pdfform} % may be toggled true in configuration
+
+\newcommand{\textfield}[3]{%
+\iftoggle{pdfform}{%
+\TextField[name = #1, backgroundcolor=white, height=#2,
+width = \linewidth, multiline=true]{\mbox}%
+}{%
+\ifprintanswers\else{%
+    \solbox{#2}{#3}}
+\fi%
+}%
+}
+
+\newcommand{\checkbox}[3]{%
+\iftoggle{pdfform}{%
+\CheckBox[name = #1, backgroundcolor=white, bordercolor=black, #2]{}%
+}{%
+\ifprintanswers\else%
+\framebox[0.6cm]{\rule{0pt}{0.4cm}#3}
+\fi%
+}%
+}
+
+\newcommand{\tf}[3]{\checkbox{#1}{}{#3} \quad #2}
+
+
+\DeclareMathOperator\Enc{Enc}
+
+\InputIfFileExists{config}{}
+
+\def\duedate{Sunday, 28 April 2019}
+
+\begin{document}
+
+\begin{Form}
+
+\begin{center}
+  \large
+  Due: \duedate, at 11:59pm
+\end{center}
+
+\paragraph{Instructions.}
+This homework is due \textbf{\duedate, at 11:59pm}. No late homeworks will be accepted unless you have prior accomodations from us.
+This assignment must be done on your own.
+
+Make sure you have a Gradescope account and are joined in this course.  The
+homework \emph{must} be submitted electronically via Gradescope (not by
+any other method).  Your answer for each question,
+when submitted on Gradescope, should be written in the space provided on this PDF form. You may either use the LaTeX form provided to fill out your responses, use Adobe Acrobat to fill in this fillable PDF, or print this paper out and handwrite your solutions, but \textbf{please make sure your responses do not overflow the box provided before submitting to ensure that you get full credit for your response.}
+\\\\\\
+\textbf{\large \color{red} REPEAT: DO NOT OVERFLOW THE BOXES. ONLY WHAT IS VISIBLE WILL BE GRADED.}
+
+\begin{questions}
+
+\newpage
+
+\titledquestion{True-or-False Questions}[9] Answer each question.  You don't need to justify or explain your answer. Check the box if it is True and leave it blank if it is False.
+
+\begin{parts}
+
+\part \tf{Q1a}{Prepared statements are a good defense against SQL injection.}{X}
+
+\part \tf{Q1b}{Setting the ``secure" flag on a cookie (so it will only be sent over HTTPS) is a good defense against CSRF.}{}
+
+\part \tf{Q1c}{Setting the ``secure" flag on a cookie (so it will only be sent over HTTPS) is a good defense against XSS cookie-leaking.}{}
+
+\part \tf{Q1d}{Setting the ``HTTPOnly" flag on a cookie is a good defense against XSS cookie-leaking.}{X}
+
+\part \tf{Q1e}{Switching over all application requests to HTTP Post stops all CSRF attacks.}{}
+
+\part \tf{Q1f}{SOP prevents XSS attacks.}{}
+
+\part \tf{Q1g}{Two Javascript scripts embedded in pages running in two different tabs on a user's browser can never access the resources of each other. }{}
+
+\part \tf{Q1h}{Browsers have a private browsing mode, which prevents websites from storing cookies on your computer altogether.}{}
+
+\part \tf{Q1i}{Because of the cookie policy, you cannot be tracked across domains by cookies.}{X}
+
+\end{parts}
+
+
+\newpage
+
+\titledquestion{Web Security Warm-Up}[15] \begin{parts}
+
+\part Oski owns a conglomerate, OskiBankAndServices.com. He hopes to compete with
+Google by combining online banking together with web services, such as web
+hosting.  As part of his business plan, Oski decides to host a website creation
+service at {\tt oskiwebhosting.com/[SITENAME]}.  This service allows you to
+choose your own {\tt SITENAME} and upload any script or HTML that you desire.
+Why is this a better design than putting user sites on {\tt
+OskiBankAndServices.com/sites/[SITENAME]}?
+
+\textfield{Q2a}{1.5cm}{
+
+By cookie origin policy, it can prevent malicious script from accessing cookies in OskiBankAndServices.com.
+}
+
+\part Your friend Chad has decided to create a new microblogging service for
+aspiring presidential candidates but with the option to choose your intended
+audience. This way if you want to post something to pander to your base you can
+do so without offending another demographic! He informs you that he can handle
+    the business side and tasks you with building the web-based sharing form,
+    PresidentialTweets.gov. You have set up a simple form with just two fields,
+    the text to share and the intended audience. When a user clicks submit, the
+    following request is made: \begin{quote}\footnotesize
+    \begin{verbatim}https://www.presidentialtweets.gov/share?text=<the text to
+    share>&audience=<the chosen demographic> \end{verbatim}
+\end{quote} You show
+    this to your bro Vladimir, and he thinks there is a problem. He later sends
+    you this message: \begin{quote} \texttt{Hey, check out this cute cat picture.
+    http://tinyurl.com/Cute161Kitty} \end{quote} You click on this link and later
+    find out that you have created a post shared with ``{\tt
+    voting-demographic}'' with the text ``I build the best aircraft carriers this
+    country has ever seen, SAD''. (TinyURL is a URL redirection service. Whoever
+    creates the link can choose whatever URL it redirects to.)
+
+How was this post created? What URL would cause this to happen? Write the link in your solution. \textit{Hint: in URLs, spaces are encoded as \texttt{\%20}.}
+
+\textfield{Q2b}{2cm}{
+TinyURL can redirect me to the following URL.
+
+https://www.presidentialtweets.gov/share?text=I\%20build\%20the\%20best \%20aircraft\%20carriers\%20this\%20country\%20has\%20ever\%20seen, SAD\&audience=voting-demographic
+}
+
+\part Continuing from part (b), what attack is this and how could you defend your
+form from the sort of attack listed in part (b)?  Explain in 1--2 sentences.
+
+\textfield{Q2c}{1.5cm}{
+This is a CSRF attack. I can use refer validation or csrf-token to defend it.
+}
+
+\end{parts}
+
+
+\newpage
+
+\titledquestion{Attempted Web Security}[10]
+\def\bank{\texttt{bank.com }}
+\def\evil{\texttt{evil.com }}
+
+\begin{parts}
+\part
+When users of \bank are logged in, a request to \texttt{bank.com/session.js} returns
+a Javascript file containing 
+
+\texttt{let sessionID = "0123456789";}
+
+except that 0123456789 is replaced with the session ID for the user who made the
+request.
+
+An attacker controls \evil and would like to learn Alice’s session ID for \bank.
+How can the attacker do this? Explain why the same-origin policy doesn’t stop this
+attack. (Assume the attacker can get Alice to visit \evil.)
+
+\textfield{Q3a}{2cm}{
+When Alice visit evil.com, the attacker can initiate a CSRF attack by placing a \textless img src=``bank.com/session.js"\textgreater \ tag. Then use the script in evil.com to send sessionID to the attacker.
+Same-origin policy doesn't work because the seesionID being sent is set in the origin of evil.com, which doesn't violate the rule.
+}
+
+\part
+When \bank learns of this problem, they fix it by beginning all Javascript files
+with
+\begin{verbatim}
+if (!document.location.includes("http://bank.com")) {
+    while (1) {} // infinite loop
+
+}
+\end{verbatim}
+Explain why this doesn’t work. How could an attacker defeat this defense?
+
+\textfield{Q3b}{2cm}{
+The location validation is not strong enough. The attacker can register an domain like this bank.com.evil.com and initiate the same attack as before.
+}
+
+\end{parts}
+
+
+\newpage
+
+\titledquestion{SQL Injection}[15]
+You are discouraged to find the following Java code in the client login section of an
+online banking website:
+
+\begin{verbatim}
+/**
+* Check whether a username and password combination is valid.
+*/
+ResultSet checkPassword(Connection conn, String username, String password)
+        throws SQLException {
+    String query = "SELECT userID FROM Customers WHERE username = '"
+        + username + "' AND password = SHA256('" + password + "');";
+    Statement s = conn.createStatement();
+    return s.executeQuery(query);
+
+}
+\end{verbatim}
+
+Assume that before issuing a request, the bank's server calls \texttt{checkPassword} and ensures that the returned \texttt{ResultSet} contains exactly one \texttt{userID}.  
+If this check fails, the bank fails the request. Otherwise the request is issued as the user represented by \texttt{userID}.
+
+Note: if there are 0 user IDs in the ResultSet then the username and/or password are
+wrong. If there are more than one then something went wrong somewhere on the bank's
+end since usernames should be unique (and consequently limit results to at most one).
+For the purposes of this question, what’s important is that the request goes through iff
+the ResultSet contains exactly one user IDs.
+
+\begin{parts}
+\part
+What username could an attacker enter in order to delete the Customers table?
+
+\textfield{Q4a}{0.5cm}{
+`; DROP table Customers;-\--
+}
+
+\part
+What username could an attacker enter in order to issue a request as user ``Admin", without having to know the password?
+
+\textfield{Q4b}{0.5cm}{
+Admin';-\--
+}
+
+\part
+When you point this out to the development team, a junior developer suggests
+simply escaping all the single quotes with a backslash. For example, the following
+line could be added to the top of the function:
+\begin{verbatim}
+username = username.replaceAll("'","\\\\'");
+\end{verbatim}
+
+This code replaces each \texttt{'} in the username with \texttt{\textbackslash'} before including it in the SQL query.
+
+Modify your answer to part (b) above so it will work against this new code. Assume
+the database engine accepts either ' or " to enclose strings.
+
+\textfield{Q4c}{0.5cm}{
+Admin``;-\--
+}
+
+\end{parts}
+
+
+\newpage
+
+\titledquestion{True/False Miscellaneous}[6] Answer each question.  You don't need to justify or explain your answer. Check the box if it is True and leave it blank if it is False.
+
+\begin{parts}
+\part \tf{Q5a}{A virus is malware that propagates by copying itself into target systems, and a worm is malware that propagates by infecting other programs.}{}
+
+\part \tf{Q5b}{Rootkits are often used to conceal other malware.}{X}
+
+\part \tf{Q5c}{Bob wants to prevent people from overwhelming his website, so he decides to implement proof-of-work. Let $d$ be the number of days since January 1, 1900. The client must send $r, H(r || d)$ where $r$ is some nonce chosen by the client. The hash must begin with 13 zero bits. If the nonce has been reused in the same day or if the hash does not begin with 13 zero bits, Bob's server ignores the request. This is a good proof-of-work scheme.}{X}
+
+\part \tf{Q5d}{A Distributed Denial of Service (DDoS) attack is executed by a botnet overwhelming the victim with large amounts of traffic coming from many sources.}{X}
+
+\part \tf{Q5e}{Tor defends against adversaries who can view all network traffic.}{}
+
+\part \tf{Q5f}{A malicious middle relay (non-exit node) can read and modify your unencrypted traffic.}{}
+
+\end{parts}
+
+
+\newpage
+
+\titledquestion{Course Survey}[5]
+
+Fill out the course survey available at this link: \url{https://forms.gle/tVSsa68kXbpR32aD9}.
+
+In order to receive credit for this question, you will need to finish the survey.
+However, your responses are anonymous and will not affect your grade in the class.
+
+
+\end{questions}
+
+\end{Form}
+
+\end{document}
+
